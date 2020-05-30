@@ -49,6 +49,12 @@ $posts = $db->prepare('SELECT m.name, m.picture, p.* FROM members m, posts p WHE
 $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
 
+// いいね記録の取得
+$favrecords = $db->prepare('SELECT * FROM favorites WHERE member_id=?');
+$favrecords->execute(array($_SESSION['id']));
+$favorites = $favrecords->fetchall();
+$favorite_post = array_column($favorites, 'post_id');
+
 // 返信の場合
 if (isset($_REQUEST['res'])) {
   $response = $db->prepare('SELECT m.name, m.picture, p.* FROM members m, posts p WHERE m.id=p.member_id AND p.id=? AND p.delete_flg=0 ORDER BY p.created DESC');
