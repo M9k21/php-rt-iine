@@ -45,7 +45,7 @@ $page = min($page, $maxPage);
 
 $start = ($page - 1) * 5;
 
-$posts = $db->prepare('SELECT m.name, m.picture, p.* FROM members m, posts p WHERE m.id=p.member_id AND p.delete_flg=0 ORDER BY p.created DESC LIMIT ?, 5');
+$posts = $db->prepare('SELECT m.name, m.picture, p.*, COUNT(f.id) AS favorite_cnt FROM members m, posts p LEFT JOIN favorites f ON p.id=f.post_id WHERE m.id=p.member_id AND p.delete_flg=0 GROUP BY p.id ORDER BY p.created DESC LIMIT ?, 5');
 $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
 
