@@ -86,6 +86,7 @@ function makeLink($value)
   <title>ひとこと掲示板</title>
 
   <link rel="stylesheet" href="css/style.css" />
+  <script src="https://kit.fontawesome.com/a6c1df6d9e.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -117,7 +118,13 @@ function makeLink($value)
           <img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>" />
           <p><?php echo makeLink(h($post['message'])); ?><span class="name"> (<?php echo h($post['name']); ?>) </span>
             [<a href="index.php?res=<?php echo h($post['id']); ?>">Re</a>]</p>
-          <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
+          <p class="day">
+            <?php if (in_array(h($post['id']), $favorite_post)) : ?>
+              <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
+            <?php else : ?>
+              <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
+            <?php endif; ?>
+            <a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
             <?php
             if ($post['reply_post_id'] > 0) :
             ?>
