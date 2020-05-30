@@ -121,8 +121,14 @@ function makeLink($value)
           <p class="day">
             <?php if (in_array(h($post['id']), $favorite_post)) : ?>
               <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
+              <?php if ($post['favorite_cnt'] > 0) : ?>
+                <span class="favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
+              <?php endif; ?>
             <?php else : ?>
               <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
+              <?php if ($post['favorite_cnt'] > 0) : ?>
+                <span class="before_favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
+              <?php endif; ?>
             <?php endif; ?>
             <a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
             <?php
