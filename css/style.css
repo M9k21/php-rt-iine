@@ -143,3 +143,23 @@ li {
 	font-size: 80%;
 	color: #999;
 }
+
+.unfavorite_btn {
+	color: #CC0000;
+	font-size: 110%;
+}
+
+.favorite_btn{
+	font-size: 110%;
+}
+
+.msg span.favorite_count {
+	font-size: 80%;
+	margin-left : -3px;
+	color: #CC0000;
+}
+
+.msg span.before_favorite_count {
+	font-size: 80%;
+	margin-left : -3px;
+}
