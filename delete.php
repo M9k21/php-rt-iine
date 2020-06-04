@@ -14,6 +14,10 @@ if (isset($_SESSION['id'])) {
     // 削除する
     $del = $db->prepare('UPDATE posts SET delete_flg=1 WHERE id=?');
     $del->execute(array($id));
+
+    // リツイートを削除する
+    $rtdel = $db->prepare('UPDATE posts SET delete_flg=1 WHERE rt_post_id=? AND delete_flg=0');
+    $rtdel->execute(array($id));
   }
 }
 

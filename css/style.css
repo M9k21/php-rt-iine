@@ -138,6 +138,10 @@ li {
 .msg p {
 	margin: 0;
 }
+.msg .retweet {
+	font-size: 60%;
+	color: #543F32;
+}
 .msg .day,
 .msg .day a {
 	font-size: 80%;
@@ -162,4 +166,24 @@ li {
 .msg span.before_favorite_count {
 	font-size: 80%;
 	margin-left : -3px;
+}
+
+.cancel_rt_btn {
+	font-size: 110%;
+	color: #543F32;
+}
+
+.rt_btn {
+	font-size: 110%;
+}
+
+.msg span.rt_count {
+	font-size: 80%;
+	margin-left: -3px;
+	color: #543F32;
+}
+
+.msg span.before_rt_count {
+	font-size: 80%;
+	margin-left: -3px;
 }

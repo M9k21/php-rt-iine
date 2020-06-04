@@ -45,7 +45,7 @@ $page = min($page, $maxPage);
 
 $start = ($page - 1) * 5;
 
-$posts = $db->prepare('SELECT m.name, m.picture, p.*, COUNT(f.id) AS favorite_cnt FROM members m, posts p LEFT JOIN favorites f ON p.id=f.post_id WHERE m.id=p.member_id AND p.delete_flg=0 GROUP BY p.id ORDER BY p.created DESC LIMIT ?, 5');
+$posts = $db->prepare('SELECT m.name, m.picture, rtm.name AS rt_name, COUNT(f.id) AS favorite_cnt, p.* FROM members m, posts p LEFT JOIN members rtm ON p.rt_member_id=rtm.id LEFT JOIN favorites f ON p.id=f.post_id WHERE m.id=p.member_id AND p.delete_flg=0 GROUP BY p.id ORDER BY p.id DESC LIMIT ?, 5');
 $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
 
@@ -55,9 +55,20 @@ $favrecords->execute(array($_SESSION['id']));
 $favorites = $favrecords->fetchall();
 $favorite_post = array_column($favorites, 'post_id');
 
+// リツイートカウント
+$rtcounts = $db->query('SELECT rt_post_id AS id, COUNT(*) AS cnt FROM posts WHERE delete_flg=0 AND rt_post_id>0 GROUP BY rt_post_id ORDER BY rt_post_id DESC');
+$rtcounts = $rtcounts->fetchall();
+$rtcount_id = array_column($rtcounts, 'id');
+
+// リツイート記録の取得
+$rtrecords = $db->prepare('SELECT * FROM posts WHERE rt_member_id=? AND delete_flg=0');
+$rtrecords->execute(array($member['id']));
+$rtweetall = $rtrecords->fetchall();
+$rt_post = array_column($rtweetall, 'rt_post_id');
+
 // 返信の場合
 if (isset($_REQUEST['res'])) {
-  $response = $db->prepare('SELECT m.name, m.picture, p.* FROM members m, posts p WHERE m.id=p.member_id AND p.id=? AND p.delete_flg=0 ORDER BY p.created DESC');
+  $response = $db->prepare('SELECT m.name, m.picture, p.* FROM members m, posts p WHERE m.id=p.member_id AND p.id=? AND p.delete_flg=0 ORDER BY p.id DESC');
   $response->execute(array($_REQUEST['res']));
 
   $table = $response->fetch();
@@ -116,35 +127,117 @@ function makeLink($value)
       ?>
         <div class="msg">
           <img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>" />
+          <?php if ($post['rt_member_id'] > 0) : ?>
+            <p class="retweet"><i class="fas fa-retweet"></i><?php echo h($post['rt_name']); ?>さんがリツイートしました</p>
+          <?php endif; ?>
           <p><?php echo makeLink(h($post['message'])); ?><span class="name"> (<?php echo h($post['name']); ?>) </span>
-            [<a href="index.php?res=<?php echo h($post['id']); ?>">Re</a>]</p>
-          <p class="day">
-            <?php if (in_array(h($post['id']), $favorite_post)) : ?>
-              <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
-              <?php if ($post['favorite_cnt'] > 0) : ?>
-                <span class="favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
-              <?php endif; ?>
+            <?php if ($post['rt_post_id'] > 0) : ?>
+              [<a href="index.php?res=<?php echo h($post['rt_post_id']); ?>">Re</a>]
             <?php else : ?>
-              <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
-              <?php if ($post['favorite_cnt'] > 0) : ?>
-                <span class="before_favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
-              <?php endif; ?>
+              [<a href="index.php?res=<?php echo h($post['id']); ?>">Re</a>]
             <?php endif; ?>
-            <a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
+          </p>
+          <p class="day">
             <?php
-            if ($post['reply_post_id'] > 0) :
+            if ($post['rt_post_id'] > 0) :
+              $post['id'] = $post['rt_post_id'];
             ?>
-              <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
-            <?php
-            endif;
-            ?>
-            <?php
-            if ($_SESSION['id'] == $post['member_id']) :
-            ?>
-              [<a href="delete.php?id=<?php echo h($post['id']); ?>" style="color:#F33;">削除</a>]
-            <?php
-            endif;
-            ?>
+              <?php if (in_array(h($post['id']), $favorite_post)) : ?>
+                <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
+                <?php if ($post['favorite_cnt'] > 0) : ?>
+                  <span class="favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
+                <?php endif; ?>
+              <?php else : ?>
+                <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
+                <?php if ($post['favorite_cnt'] > 0) : ?>
+                  <span class="before_favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
+                <?php endif; ?>
+              <?php endif; ?>
+              <?php if (in_array(h($post['id']), $rt_post)) : ?>
+                <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
+                <?php
+                if (in_array($post['id'], $rtcount_id)) :
+                  $rt = array_search($post['id'], $rtcount_id);
+                ?>
+                  <span class="rt_count"><?php echo h($rtcounts[$rt]['cnt']); ?></span>
+                <?php
+                endif;
+                ?>
+              <?php else : ?>
+                <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet rt_btn"></i></a>
+                <?php
+                if (in_array($post['id'], $rtcount_id)) :
+                  $rt = array_search($post['id'], $rtcount_id);
+                ?>
+                  <span class="before_rt_count"><?php echo h($rtcounts[$rt]['cnt']); ?></span>
+                <?php
+                endif;
+                ?>
+              <?php endif; ?>
+              <a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
+              <?php
+              if ($post['reply_post_id'] > 0) :
+              ?>
+                <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
+              <?php
+              endif;
+              ?>
+              <?php
+              if ($_SESSION['id'] == $post['member_id']) :
+              ?>
+                [<a href="delete.php?id=<?php echo h($post['id']); ?>" style="color:#F33;">削除</a>]
+              <?php
+              endif;
+              ?>
+            <?php else : ?>
+              <?php if (in_array(h($post['id']), $favorite_post)) : ?>
+                <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
+                <?php if ($post['favorite_cnt'] > 0) : ?>
+                  <span class="favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
+                <?php endif; ?>
+              <?php else : ?>
+                <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
+                <?php if ($post['favorite_cnt'] > 0) : ?>
+                  <span class="before_favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
+                <?php endif; ?>
+              <?php endif; ?>
+              <?php if (in_array(h($post['id']), $rt_post)) : ?>
+                <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
+                <?php
+                if (in_array($post['id'], $rtcount_id)) :
+                  $rt = array_search($post['id'], $rtcount_id);
+                ?>
+                  <span class="rt_count"><?php echo h($rtcounts[$rt]['cnt']); ?></span>
+                <?php
+                endif;
+                ?>
+              <?php else : ?>
+                <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet rt_btn"></i></a>
+                <?php
+                if (in_array($post['id'], $rtcount_id)) :
+                  $rt = array_search($post['id'], $rtcount_id);
+                ?>
+                  <span class="before_rt_count"><?php echo h($rtcounts[$rt]['cnt']); ?></span>
+                <?php
+                endif;
+                ?>
+              <?php endif; ?>
+              <a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
+              <?php
+              if ($post['reply_post_id'] > 0) :
+              ?>
+                <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
+              <?php
+              endif;
+              ?>
+              <?php
+              if ($_SESSION['id'] == $post['member_id']) :
+              ?>
+                [<a href="delete.php?id=<?php echo h($post['id']); ?>" style="color:#F33;">削除</a>]
+              <?php
+              endif;
+              ?>
+            <?php endif; ?>
           </p>
         </div>
       <?php
