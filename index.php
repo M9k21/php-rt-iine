@@ -45,7 +45,7 @@ $page = min($page, $maxPage);
 
 $start = ($page - 1) * 5;
 
-$posts = $db->prepare('SELECT m.name, m.picture, rtm.name AS rt_name, COUNT(f.id) AS favorite_cnt, p.* FROM members m, posts p LEFT JOIN members rtm ON p.rt_member_id=rtm.id LEFT JOIN favorites f ON p.id=f.post_id WHERE m.id=p.member_id AND p.delete_flg=0 GROUP BY p.id ORDER BY p.id DESC LIMIT ?, 5');
+$posts = $db->prepare('SELECT m.name, m.picture, rtm.name AS rt_name, p.* FROM members m, posts p LEFT JOIN members rtm ON p.rt_member_id=rtm.id WHERE m.id=p.member_id AND p.delete_flg=0 GROUP BY p.id ORDER BY p.id DESC LIMIT ?, 5');
 $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
 
@@ -54,6 +54,11 @@ $favrecords = $db->prepare('SELECT * FROM favorites WHERE member_id=?');
 $favrecords->execute(array($_SESSION['id']));
 $favorites = $favrecords->fetchall();
 $favorite_post = array_column($favorites, 'post_id');
+
+// いいねカウント
+$favcounts = $db->query('SELECT post_id, COUNT(*) AS cnt FROM favorites GROUP BY post_id ORDER BY post_id DESC');
+$favcounts = $favcounts->fetchall();
+$favcount_id = array_column($favcounts, 'post_id');
 
 // リツイートカウント
 $rtcounts = $db->query('SELECT rt_post_id AS id, COUNT(*) AS cnt FROM posts WHERE delete_flg=0 AND rt_post_id>0 GROUP BY rt_post_id ORDER BY rt_post_id DESC');
@@ -144,14 +149,24 @@ function makeLink($value)
             ?>
               <?php if (in_array(h($post['id']), $favorite_post)) : ?>
                 <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
-                <?php if ($post['favorite_cnt'] > 0) : ?>
-                  <span class="favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
-                <?php endif; ?>
+                <?php
+                if (in_array($post['id'], $favcount_id)) :
+                  $fav = array_search($post['id'], $favcount_id);
+                ?>
+                  <span class="favorite_count"><?php echo h($favcounts[$fav]['cnt']); ?></span>
+                <?php
+                endif;
+                ?>
               <?php else : ?>
                 <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
-                <?php if ($post['favorite_cnt'] > 0) : ?>
-                  <span class="before_favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
-                <?php endif; ?>
+                <?php
+                if (in_array($post['id'], $favcount_id)) :
+                  $fav = array_search($post['id'], $favcount_id);
+                ?>
+                  <span class="before_favorite_count"><?php echo h($favcounts[$fav]['cnt']); ?></span>
+                <?php
+                endif;
+                ?>
               <?php endif; ?>
               <?php if (in_array(h($post['id']), $rt_post)) : ?>
                 <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
@@ -192,14 +207,24 @@ function makeLink($value)
             <?php else : ?>
               <?php if (in_array(h($post['id']), $favorite_post)) : ?>
                 <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
-                <?php if ($post['favorite_cnt'] > 0) : ?>
-                  <span class="favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
-                <?php endif; ?>
+                <?php
+                if (in_array($post['id'], $favcount_id)) :
+                  $fav = array_search($post['id'], $favcount_id);
+                ?>
+                  <span class="favorite_count"><?php echo h($favcounts[$fav]['cnt']); ?></span>
+                <?php
+                endif;
+                ?>
               <?php else : ?>
                 <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
-                <?php if ($post['favorite_cnt'] > 0) : ?>
-                  <span class="before_favorite_count"><?php echo h($post['favorite_cnt']); ?></span>
-                <?php endif; ?>
+                <?php
+                if (in_array($post['id'], $favcount_id)) :
+                  $fav = array_search($post['id'], $favcount_id);
+                ?>
+                  <span class="before_favorite_count"><?php echo h($favcounts[$fav]['cnt']); ?></span>
+                <?php
+                endif;
+                ?>
               <?php endif; ?>
               <?php if (in_array(h($post['id']), $rt_post)) : ?>
                 <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
