@@ -190,21 +190,9 @@ function makeLink($value)
                 ?>
               <?php endif; ?>
               <a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
-              <?php
-              if ($post['reply_post_id'] > 0) :
-              ?>
-                <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
-              <?php
-              endif;
-              ?>
-              <?php
-              if ($_SESSION['id'] == $post['member_id']) :
-              ?>
-                [<a href="delete.php?id=<?php echo h($post['id']); ?>" style="color:#F33;">削除</a>]
-              <?php
-              endif;
-              ?>
-            <?php else : ?>
+            <?php
+            else :
+            ?>
               <?php if (in_array(($post['id']), $favorite_post)) : ?>
                 <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
                 <?php
@@ -248,21 +236,33 @@ function makeLink($value)
                 ?>
               <?php endif; ?>
               <a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
+            <?php
+            endif;
+            ?>
+            <?php
+            if ($post['reply_post_id'] > 0) :
+            ?>
+              <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
+            <?php
+            endif;
+            ?>
+            <?php
+            if ($_SESSION['id'] == $post['member_id']) :
+            ?>
               <?php
-              if ($post['reply_post_id'] > 0) :
+              if ($post['rt_post_id'] > 0) :
               ?>
-                <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
+                [<a href="delete.php?id=<?php echo h($post['rt_post_id']); ?>" style="color:#F33;">削除</a>]
               <?php
-              endif;
-              ?>
-              <?php
-              if ($_SESSION['id'] == $post['member_id']) :
+              else :
               ?>
                 [<a href="delete.php?id=<?php echo h($post['id']); ?>" style="color:#F33;">削除</a>]
               <?php
               endif;
               ?>
-            <?php endif; ?>
+            <?php
+            endif;
+            ?>
           </p>
         </div>
       <?php
