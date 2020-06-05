@@ -147,7 +147,7 @@ function makeLink($value)
             if ($post['rt_post_id'] > 0) :
               $post['id'] = $post['rt_post_id'];
             ?>
-              <?php if (in_array(h($post['id']), $favorite_post)) : ?>
+              <?php if (in_array(($post['id']), $favorite_post)) : ?>
                 <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $favcount_id)) :
@@ -168,7 +168,7 @@ function makeLink($value)
                 endif;
                 ?>
               <?php endif; ?>
-              <?php if (in_array(h($post['id']), $rt_post)) : ?>
+              <?php if (in_array(($post['id']), $rt_post)) : ?>
                 <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $rtcount_id)) :
@@ -205,7 +205,7 @@ function makeLink($value)
               endif;
               ?>
             <?php else : ?>
-              <?php if (in_array(h($post['id']), $favorite_post)) : ?>
+              <?php if (in_array(($post['id']), $favorite_post)) : ?>
                 <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $favcount_id)) :
@@ -226,7 +226,7 @@ function makeLink($value)
                 endif;
                 ?>
               <?php endif; ?>
-              <?php if (in_array(h($post['id']), $rt_post)) : ?>
+              <?php if (in_array(($post['id']), $rt_post)) : ?>
                 <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $rtcount_id)) :
