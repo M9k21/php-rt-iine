@@ -169,7 +169,7 @@ function makeLink($value)
                 ?>
               <?php endif; ?>
               <?php if (in_array(($post['id']), $rt_post)) : ?>
-                <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
+                <a href="retweet.php?post_id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $rtcount_id)) :
                   $rt = array_search($post['id'], $rtcount_id);
@@ -179,7 +179,7 @@ function makeLink($value)
                 endif;
                 ?>
               <?php else : ?>
-                <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet rt_btn"></i></a>
+                <a href="retweet.php?post_id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet rt_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $rtcount_id)) :
                   $rt = array_search($post['id'], $rtcount_id);
@@ -215,7 +215,7 @@ function makeLink($value)
                 ?>
               <?php endif; ?>
               <?php if (in_array(($post['id']), $rt_post)) : ?>
-                <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
+                <a href="retweet.php?post_id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $rtcount_id)) :
                   $rt = array_search($post['id'], $rtcount_id);
@@ -225,7 +225,7 @@ function makeLink($value)
                 endif;
                 ?>
               <?php else : ?>
-                <a href="retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet rt_btn"></i></a>
+                <a href="retweet.php?post_id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet rt_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $rtcount_id)) :
                   $rt = array_search($post['id'], $rtcount_id);
