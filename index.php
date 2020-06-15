@@ -136,9 +136,7 @@ function retweet_url($value)
         </div>
       </form>
 
-      <?php
-      foreach ($posts as $post) :
-      ?>
+      <?php foreach ($posts as $post) : ?>
         <div class="msg">
           <img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>" />
           <?php if ($post['rt_member_id'] > 0) : ?>
@@ -152,131 +150,77 @@ function retweet_url($value)
             <?php endif; ?>
           </p>
           <p class="day">
-            <?php
-            if ($post['rt_post_id'] > 0) :
-              $post['id'] = $post['rt_post_id'];
-            ?>
+            <?php if ($post['rt_post_id'] > 0) :
+              $post['id'] = $post['rt_post_id']; ?>
               <?php if (in_array(($post['id']), $favorite_post)) : ?>
                 <a href="<?php echo favorite_url(h($post['id'])) ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
-                <?php
-                if (in_array($post['id'], $favcount_id)) :
-                  $fav = array_search($post['id'], $favcount_id);
-                ?>
+                <?php if (in_array($post['id'], $favcount_id)) :
+                  $fav = array_search($post['id'], $favcount_id); ?>
                   <span class="favorite_count"><?php echo h($favcounts[$fav]['cnt']); ?></span>
-                <?php
-                endif;
-                ?>
+                <?php endif; ?>
               <?php else : ?>
                 <a href="<?php echo favorite_url(h($post['id'])) ?>"><i class="far fa-heart favorite_btn"></i></a>
-                <?php
-                if (in_array($post['id'], $favcount_id)) :
-                  $fav = array_search($post['id'], $favcount_id);
-                ?>
+                <?php if (in_array($post['id'], $favcount_id)) :
+                  $fav = array_search($post['id'], $favcount_id); ?>
                   <span class="before_favorite_count"><?php echo h($favcounts[$fav]['cnt']); ?></span>
-                <?php
-                endif;
-                ?>
+                <?php endif; ?>
               <?php endif; ?>
               <?php if (in_array(($post['id']), $rt_post)) : ?>
                 <a href="<?php echo retweet_url(h($post['id'])) ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
-                <?php
-                if (in_array($post['id'], $rtcount_id)) :
-                  $rt = array_search($post['id'], $rtcount_id);
-                ?>
+                <?php if (in_array($post['id'], $rtcount_id)) :
+                  $rt = array_search($post['id'], $rtcount_id); ?>
                   <span class="rt_count"><?php echo h($rtcounts[$rt]['cnt']); ?></span>
-                <?php
-                endif;
-                ?>
+                <?php endif; ?>
               <?php else : ?>
                 <a href="<?php echo retweet_url(h($post['id'])) ?>"><i class="fas fa-retweet rt_btn"></i></a>
-                <?php
-                if (in_array($post['id'], $rtcount_id)) :
-                  $rt = array_search($post['id'], $rtcount_id);
-                ?>
+                <?php if (in_array($post['id'], $rtcount_id)) :
+                  $rt = array_search($post['id'], $rtcount_id); ?>
                   <span class="before_rt_count"><?php echo h($rtcounts[$rt]['cnt']); ?></span>
-                <?php
-                endif;
-                ?>
+                <?php endif; ?>
               <?php endif; ?>
               <a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
-            <?php
-            else :
-            ?>
+            <?php else : ?>
               <?php if (in_array(($post['id']), $favorite_post)) : ?>
                 <a href="<?php echo favorite_url(h($post['id'])) ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
-                <?php
-                if (in_array($post['id'], $favcount_id)) :
-                  $fav = array_search($post['id'], $favcount_id);
-                ?>
+                <?php if (in_array($post['id'], $favcount_id)) :
+                  $fav = array_search($post['id'], $favcount_id); ?>
                   <span class="favorite_count"><?php echo h($favcounts[$fav]['cnt']); ?></span>
-                <?php
-                endif;
-                ?>
+                <?php endif; ?>
               <?php else : ?>
                 <a href="<?php echo favorite_url(h($post['id'])) ?>"><i class="far fa-heart favorite_btn"></i></a>
-                <?php
-                if (in_array($post['id'], $favcount_id)) :
-                  $fav = array_search($post['id'], $favcount_id);
-                ?>
+                <?php if (in_array($post['id'], $favcount_id)) :
+                  $fav = array_search($post['id'], $favcount_id); ?>
                   <span class="before_favorite_count"><?php echo h($favcounts[$fav]['cnt']); ?></span>
-                <?php
-                endif;
-                ?>
+                <?php endif; ?>
               <?php endif; ?>
               <?php if (in_array(($post['id']), $rt_post)) : ?>
                 <a href="<?php echo retweet_url(h($post['id'])) ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
-                <?php
-                if (in_array($post['id'], $rtcount_id)) :
-                  $rt = array_search($post['id'], $rtcount_id);
-                ?>
+                <?php if (in_array($post['id'], $rtcount_id)) :
+                  $rt = array_search($post['id'], $rtcount_id); ?>
                   <span class="rt_count"><?php echo h($rtcounts[$rt]['cnt']); ?></span>
-                <?php
-                endif;
-                ?>
+                <?php endif; ?>
               <?php else : ?>
                 <a href="<?php echo retweet_url(h($post['id'])) ?>"><i class="fas fa-retweet rt_btn"></i></a>
-                <?php
-                if (in_array($post['id'], $rtcount_id)) :
-                  $rt = array_search($post['id'], $rtcount_id);
-                ?>
+                <?php if (in_array($post['id'], $rtcount_id)) :
+                  $rt = array_search($post['id'], $rtcount_id); ?>
                   <span class="before_rt_count"><?php echo h($rtcounts[$rt]['cnt']); ?></span>
-                <?php
-                endif;
-                ?>
+                <?php endif; ?>
               <?php endif; ?>
               <a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
-            <?php
-            endif;
-            ?>
-            <?php
-            if ($post['reply_post_id'] > 0) :
-            ?>
+            <?php endif; ?>
+            <?php if ($post['reply_post_id'] > 0) : ?>
               <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
-            <?php
-            endif;
-            ?>
-            <?php
-            if ($_SESSION['id'] == $post['member_id']) :
-            ?>
-              <?php
-              if ($post['rt_post_id'] > 0) :
-              ?>
+            <?php endif; ?>
+            <?php if ($_SESSION['id'] == $post['member_id']) : ?>
+              <?php if ($post['rt_post_id'] > 0) : ?>
                 [<a href="delete.php?id=<?php echo h($post['rt_post_id']); ?>" style="color:#F33;">削除</a>]
-              <?php
-              else :
-              ?>
+              <?php else : ?>
                 [<a href="delete.php?id=<?php echo h($post['id']); ?>" style="color:#F33;">削除</a>]
-              <?php
-              endif;
-              ?>
-            <?php
-            endif;
-            ?>
+              <?php endif; ?>
+            <?php endif; ?>
           </p>
         </div>
-      <?php
-      endforeach;
-      ?>
+      <?php endforeach; ?>
 
       <ul class="paging">
         <?php if ($page > 1) : ?>
