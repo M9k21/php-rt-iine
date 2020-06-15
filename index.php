@@ -32,9 +32,6 @@ if (!empty($_POST)) {
 
 // 投稿を取得する
 $page = $_REQUEST['page'];
-if ($page == '') {
-  $page = 1;
-}
 $page = max($page, 1);
 
 // 最終ページを取得する
