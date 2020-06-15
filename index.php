@@ -88,6 +88,12 @@ function makeLink($value)
 {
   return mb_ereg_replace("(https?)(://[[:alnum:]\+\$\;\?\.%,!#~*/:@&=_-]+)", '<a href="\1\2">\1\2</a>', $value);
 }
+
+// retweetのURLのショートカット
+function retweet_url($value)
+{
+  return 'retweet.php?post_id=' . $value;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -166,7 +172,7 @@ function makeLink($value)
                 ?>
               <?php endif; ?>
               <?php if (in_array(($post['id']), $rt_post)) : ?>
-                <a href="retweet.php?post_id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
+                <a href="<?php echo retweet_url(h($post['id'])) ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $rtcount_id)) :
                   $rt = array_search($post['id'], $rtcount_id);
@@ -176,7 +182,7 @@ function makeLink($value)
                 endif;
                 ?>
               <?php else : ?>
-                <a href="retweet.php?post_id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet rt_btn"></i></a>
+                <a href="<?php echo retweet_url(h($post['id'])) ?>"><i class="fas fa-retweet rt_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $rtcount_id)) :
                   $rt = array_search($post['id'], $rtcount_id);
@@ -212,7 +218,7 @@ function makeLink($value)
                 ?>
               <?php endif; ?>
               <?php if (in_array(($post['id']), $rt_post)) : ?>
-                <a href="retweet.php?post_id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
+                <a href="<?php echo retweet_url(h($post['id'])) ?>"><i class="fas fa-retweet cancel_rt_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $rtcount_id)) :
                   $rt = array_search($post['id'], $rtcount_id);
@@ -222,7 +228,7 @@ function makeLink($value)
                 endif;
                 ?>
               <?php else : ?>
-                <a href="retweet.php?post_id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet rt_btn"></i></a>
+                <a href="<?php echo retweet_url(h($post['id'])) ?>"><i class="fas fa-retweet rt_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $rtcount_id)) :
                   $rt = array_search($post['id'], $rtcount_id);
