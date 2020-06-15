@@ -148,7 +148,7 @@ function makeLink($value)
               $post['id'] = $post['rt_post_id'];
             ?>
               <?php if (in_array(($post['id']), $favorite_post)) : ?>
-                <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
+                <a href="favorite.php?post_id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $favcount_id)) :
                   $fav = array_search($post['id'], $favcount_id);
@@ -158,7 +158,7 @@ function makeLink($value)
                 endif;
                 ?>
               <?php else : ?>
-                <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
+                <a href="favorite.php?post_id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $favcount_id)) :
                   $fav = array_search($post['id'], $favcount_id);
@@ -194,7 +194,7 @@ function makeLink($value)
             else :
             ?>
               <?php if (in_array(($post['id']), $favorite_post)) : ?>
-                <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
+                <a href="favorite.php?post_id=<?php echo h($post['id']); ?>"><i class="fas fa-heart unfavorite_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $favcount_id)) :
                   $fav = array_search($post['id'], $favcount_id);
@@ -204,7 +204,7 @@ function makeLink($value)
                 endif;
                 ?>
               <?php else : ?>
-                <a href="favorite.php?id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
+                <a href="favorite.php?post_id=<?php echo h($post['id']); ?>"><i class="far fa-heart favorite_btn"></i></a>
                 <?php
                 if (in_array($post['id'], $favcount_id)) :
                   $fav = array_search($post['id'], $favcount_id);
