@@ -10,7 +10,7 @@ if (isset($_SESSION['id'])) {
   $messages->execute(array($id));
   $message = $messages->fetch();
 
-  if ($message['member_id'] == $_SESSION['id']) {
+  if ($message['member_id'] === $_SESSION['id']) {
     $db->begintransaction();
     // 削除する
     $del = $db->prepare('UPDATE posts SET delete_flg=1 WHERE id=?');
