@@ -17,9 +17,9 @@ if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
 
 // 投稿を記録する
 if (!empty($_POST)) {
-  if ($_POST['message'] != '') {
+  if ($_POST['message'] !== '') {
 
-    if ($_POST['reply_post_id'] == '') {
+    if ($_POST['reply_post_id'] === '') {
       $_POST['reply_post_id'] = NULL;
     }
 
@@ -216,7 +216,7 @@ function retweet_url($value)
             <?php if ($post['reply_post_id'] > 0) : ?>
               <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
             <?php endif; ?>
-            <?php if ($_SESSION['id'] == $post['member_id']) : ?>
+            <?php if ($_SESSION['id'] === $post['member_id']) : ?>
               <?php if ($post['rt_post_id'] > 0) : ?>
                 [<a href="delete.php?id=<?php echo h($post['rt_post_id']); ?>" style="color:#F33;">削除</a>]
               <?php else : ?>
